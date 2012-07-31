@@ -15,12 +15,13 @@ apt-get clean
 apt-get -y install dkms
 VBOX_VERSION=$(cat /home/vagrant/.vbox_version)
 cd /tmp
-wget http://download.virtualbox.org/virtualbox/$VBOX_VERSION/VBoxGuestAdditions_$VBOX_VERSION.iso
-mount -o loop VBoxGuestAdditions_$VBOX_VERSION.iso /mnt
+#wget http://download.virtualbox.org/virtualbox/$VBOX_VERSION/VBoxGuestAdditions_$VBOX_VERSION.iso
+#mount -o loop VBoxGuestAdditions_$VBOX_VERSION.iso /mnt
+# veewee is smart enough to insert guest additions iso into dvd1 drive 
+mount -o loop /dev/dvd1 /mnt
 sh /mnt/VBoxLinuxAdditions.run
 umount /mnt
-
-rm VBoxGuestAdditions_$VBOX_VERSION.iso
+#rm VBoxGuestAdditions_$VBOX_VERSION.iso
 
 # Setup sudo to allow no-password sudo for "admin"
 groupadd -r admin
@@ -29,15 +30,21 @@ cp /etc/sudoers /etc/sudoers.orig
 sed -i -e '/Defaults\s\+env_reset/a Defaults\texempt_group=admin' /etc/sudoers
 sed -i -e 's/%admin ALL=(ALL) ALL/%admin ALL=NOPASSWD:ALL/g' /etc/sudoers
 
-# Install NFS client
-apt-get -y install nfs-common
+# Install RVM
+curl -L get.rvm.io | bash -s stable
 
-# Install Ruby from packages
-apt-get -y install ruby rubygems
+# To enable rvm path configuration via /etc/profile.d/rvm.sh
+usermod -G rvm -a vagrant
+usermod -G rvm -a root
 
-# Installing chef & Puppet
-gem install chef --no-ri --no-rdoc
-gem install puppet --no-ri --no-rdoc
+# rvm path configuration
+source /etc/profile.d/rvm.sh
+
+# Install ruby 1.9.3
+rvm install 1.9.3
+
+# Installing chef
+gem install chef --no-rdoc --no-ri
 
 # Installing vagrant keys
 mkdir /home/vagrant/.ssh
