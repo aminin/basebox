@@ -14,14 +14,11 @@ apt-get clean
 # Installing the virtualbox guest additions
 apt-get -y install dkms
 VBOX_VERSION=$(cat /home/vagrant/.vbox_version)
-cd /tmp
-#wget http://download.virtualbox.org/virtualbox/$VBOX_VERSION/VBoxGuestAdditions_$VBOX_VERSION.iso
-#mount -o loop VBoxGuestAdditions_$VBOX_VERSION.iso /mnt
+
 # veewee is smart enough to insert guest additions iso into dvd1 drive 
 mount -o loop /dev/dvd1 /mnt
 sh /mnt/VBoxLinuxAdditions.run
 umount /mnt
-#rm VBoxGuestAdditions_$VBOX_VERSION.iso
 
 # Setup sudo to allow no-password sudo for "admin"
 groupadd -r admin
@@ -31,20 +28,31 @@ sed -i -e '/Defaults\s\+env_reset/a Defaults\texempt_group=admin' /etc/sudoers
 sed -i -e 's/%admin ALL=(ALL) ALL/%admin ALL=NOPASSWD:ALL/g' /etc/sudoers
 
 # Install RVM
-curl -L get.rvm.io | bash -s stable
+curl -L get.rvm.io -o /tmp/rvm-installer
+chmod +x /tmp/rvm-installer
+/tmp/rvm-installer stable
 
 # To enable rvm path configuration via /etc/profile.d/rvm.sh
 usermod -G rvm -a vagrant
 usermod -G rvm -a root
 
 # rvm path configuration
-source /etc/profile.d/rvm.sh
+source /etc/profile
 
 # Install ruby 1.9.3
-rvm install 1.9.3
+echo "gem: --no-rdoc --no-ri" > /home/vagrant/.gemrc
+chown vagrant:vagrant /home/vagrant/.gemrc
 
-# Installing chef
-gem install chef --no-rdoc --no-ri
+# Install Ruby using RVM
+echo "Installing Ruby 1.9.3 as default ruby"
+bash -c '
+ source /etc/profile
+ rvm install 1.9.3
+ rvm alias create default ruby-1.9.3
+ rvm use 1.9.3 --default
+
+ echo "Installing default RubyGems"
+ gem install --no-rdoc --no-ri chef'
 
 # Installing vagrant keys
 mkdir /home/vagrant/.ssh

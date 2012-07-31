@@ -1,8 +1,8 @@
 # obviously this is using the "alternate" ISO, not the "server" ISO, but that
 # is only because it hasn't been released yet.
 Veewee::Session.declare({
-  :cpu_count => '2',
-  :memory_size=> '1024',
+  :cpu_count => '1',
+  :memory_size=> '512',
   :disk_size => '10140',
   :disk_format => 'VDI',
   :hostiocache => 'off',
