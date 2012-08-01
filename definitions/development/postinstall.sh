@@ -47,6 +47,7 @@ chown vagrant:vagrant /home/vagrant/.gemrc
 echo "Installing Ruby 1.9.3 as default ruby"
 bash -c '
  source /etc/profile
+ function less { tee; }
  rvm install 1.9.3
  rvm alias create default ruby-1.9.3
  rvm use 1.9.3 --default
