@@ -16,7 +16,7 @@ apt-get -y install dkms
 VBOX_VERSION=$(cat /home/vagrant/.vbox_version)
 
 # veewee is smart enough to insert guest additions iso into dvd1 drive 
-mount -o loop /dev/dvd1 /mnt
+mount -o loop VBoxGuestAdditions_$VBOX_VERSION.iso /mnt
 sh /mnt/VBoxLinuxAdditions.run
 umount /mnt
 
