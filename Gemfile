@@ -1,4 +1,4 @@
 # A sample Gemfile
 source "https://rubygems.org"
 
-gem "veewee", "~> 0.3.0.alpha9"
+gem "veewee", "~> 0.3.12"

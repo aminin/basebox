@@ -9,9 +9,9 @@
     cd basebox
 
     bundle install
-    vagrant basebox build development
-    vagrant basebox halt development
-    vagrant basebox export development
+    bundle exec veewee vbox build development
+    bundle exec veewee vbox halt development
+    bundle exec veewee vbox export development
     vagrant box add ubuntu-12.04-server-amd64 development.box
-    vagrant basebox destroy development
+    bundle exec veewee vbox destroy development
 
